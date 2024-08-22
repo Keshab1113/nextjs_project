@@ -1,7 +1,39 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import { HiUserCircle } from 'react-icons/hi';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
-const ProfilePage: React.FC = () => {
+const ProfilePage = () => {
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+
+  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+  const handleChangePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(e.target.value);
+  };
+  const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value);
+  };
+
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      toast.success("Logout Successfull");
+      router.push("/login");
+    } catch (error:any) {
+      toast.error("Logout Failed");
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-800 flex justify-center items-center text-black">
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6">
@@ -20,7 +52,9 @@ const ProfilePage: React.FC = () => {
               <input
                 type="text"
                 className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
-                value="John Doe"
+                value={name}
+                placeholder="John Doe"
+                onChange={handleChangeName}
               />
             </div>
             <div>
@@ -28,15 +62,19 @@ const ProfilePage: React.FC = () => {
               <input
                 type="email"
                 className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
-                value="johndoe@example.com"
+                value={email}
+                placeholder="johndoe@example.com"
+                onChange={handleChangeEmail}
               />
             </div>
             <div>
               <label className="text-gray-600">Phone Number</label>
               <input
-                type="text"
+                type="number"
                 className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
-                value="+1 234 567 890"
+                value={phone}
+                placeholder="+1 234 567 890"
+                onChange={handleChangePhone}
               />
             </div>
             <div>
@@ -44,17 +82,26 @@ const ProfilePage: React.FC = () => {
               <input
                 type="text"
                 className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
-                value="123 Main St, City, Country"
+                value={address}
+                placeholder="123 Main St, City, Country"
+                onChange={handleChangeAddress}
               />
             </div>
           </div>
           <div className="mt-6 flex justify-end">
+            <button onClick={logout} className="px-4 py-2 mr-4 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+              Logout
+            </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
               Save Changes
             </button>
           </div>
         </div>
       </div>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
     </div>
   );
 };

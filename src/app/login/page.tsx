@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -14,10 +15,10 @@ const LoginPage = () => {
   const onLogin = async () => {
     try {
       const response = await axios.post("/api/users/login", user);
-      console.log("Login success", response.data);
+      toast.success("Login Successfull");
       router.push("/profile");
     } catch (error:any) {
-      console.log("Login failed", error.message);
+      toast.error("Login failed");
       
     }
   };
@@ -56,7 +57,12 @@ const LoginPage = () => {
           >
             Login
           </button>
+          
         </div>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
         <h1 className="mt-4 text-gray-400 text-center">
           Don't have an account?{' '}
           <Link href="/signup" className="text-blue-500 hover:underline">
